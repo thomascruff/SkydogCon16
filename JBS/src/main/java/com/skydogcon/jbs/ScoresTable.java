@@ -38,7 +38,9 @@ public final class ScoresTable extends DatabaseTableImpl{
 	
 	public ScoresTable(){
 		super();
-		try{
+		
+		//Prepare the insert statement for future use.
+		try{			
 			String pStatement = "insert into " + this.getTableName() + "("
 					+ ScoresTable.COL_ID + ", "
 					+ ScoresTable.COL_IP + ", "
@@ -49,7 +51,6 @@ public final class ScoresTable extends DatabaseTableImpl{
 					+ ScoresTable.COL_LAT + ", "
 					+ ScoresTable.COL_LONG
 					+ ") values (?,?,?,?,?,?,?,?)";
-			System.out.println("Prepared statement is:" + pStatement);
 			this.psInsert = this.getConnection().prepareStatement(pStatement);
 		}catch(SQLException sqle){
 			ErrorHandler.errorPrint(sqle);

@@ -26,17 +26,6 @@ public final class ScoringDatabase {
 		     System.err.print("ClassNotFoundException: ");
 		     System.err.println(e.getMessage());
 		}
-		
-		/*
-		 * Check for the existence of the SCORES table.
-		 * Create SCORES table if this is first boot.
-		 */
-		try{
-			ScoresTable st = new ScoresTable();
-			st.createTable();
-		}catch(Throwable e){
-			ErrorHandler.errorPrint(e);
-		}
 	}
 	
 	public static final void shutdown(){

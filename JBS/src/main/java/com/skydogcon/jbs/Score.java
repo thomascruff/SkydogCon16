@@ -3,11 +3,23 @@
  */
 package com.skydogcon.jbs;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.net.URL;
+import java.net.URLConnection;
+
+import javax.xml.parsers.DocumentBuilder;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
 /**
  * @author TheCelticTyger
  *
  */
 public final class Score {
+	//Class Constants
+	private static final String baseGeoURL = "http://freegeoip.net/xml/";
+	
 	//Instance Variable
 	private String id = null;
 	private String ip = null;
@@ -22,6 +34,7 @@ public final class Score {
 		this.id = id;
 		this.ip = ip;
 		this.score = score;
+		this.geoLocationLookup();
 	}
 
 	public String getId() {
@@ -88,7 +101,53 @@ public final class Score {
 		this.longitude = longitude;
 	}
 	
-	private void geoLocationLookup(){
-		
+	public String toString(){
+		String retVal = super.toString() + "\n";
+		retVal = retVal + this.printField(this.getId());
+		retVal = retVal + this.printField(this.getIp());
+		retVal = retVal + this.printField(this.getCountry());
+		retVal = retVal + this.printField(this.getRegion());
+		retVal = retVal + this.printField(this.getCity());
+		retVal = retVal + this.printField(new Float(this.getLatitude()).toString());
+		retVal = retVal + this.printField(new Float(this.getLongitude()).toString());
+		return retVal;
 	}
+	
+	private String printField(String field){
+		return "\t" + field + "\n";
+	}
+	
+	private void geoLocationLookup(){
+        try {
+			URL url = new URL(Score.baseGeoURL + this.ip);
+			URLConnection connection = url.openConnection();
+			DocumentBuilderFactory objDocumentBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder objDocumentBuilder = objDocumentBuilderFactory.newDocumentBuilder();
+			Document doc = objDocumentBuilder.parse(connection.getInputStream());
+
+			NodeList descNodes = null;
+			
+			//Retrieve and set Country Code
+			descNodes =	doc.getElementsByTagName("CountryCode");
+			this.setCountry(descNodes.item(0).getTextContent());
+			
+			//Retrieve and set Region Code
+			descNodes = doc.getElementsByTagName("RegionCode");
+			this.setRegion(descNodes.item(0).getTextContent());
+			
+			//Retrieve and set City
+			descNodes = doc.getElementsByTagName("City");
+			this.setCity(descNodes.item(0).getTextContent());
+			
+			//Retrieve and set Latitude
+			descNodes = doc.getElementsByTagName("Latitude");
+			this.setLatitude(new Float(descNodes.item(0).getTextContent()));
+			
+			//Retrieve and set Longitude
+			descNodes = doc.getElementsByTagName("Longitude");
+			this.setLongitude(new Float(descNodes.item(0).getTextContent()));
+		} catch (Exception e) {
+			ErrorHandler.errorPrint(e);
+		}
+    }
 }

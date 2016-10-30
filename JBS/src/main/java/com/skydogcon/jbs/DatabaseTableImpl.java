@@ -20,6 +20,9 @@ public abstract class DatabaseTableImpl implements DatabaseTable{
 		try{
 			this.conn = DriverManager.getConnection(ScoringDatabase.DATABASE_URI);
 			System.out.println("Connection to database established.");
+			
+			//Check if table exists.  If not create it.
+			this.createTable();
 		}catch(SQLException sqle){
 			System.out.println("Connection to database could not be established.");
 			ErrorHandler.errorPrint(sqle);

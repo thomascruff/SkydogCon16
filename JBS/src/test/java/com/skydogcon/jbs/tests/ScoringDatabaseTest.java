@@ -8,7 +8,7 @@ import com.skydogcon.jbs.ScoresTable;
 import com.skydogcon.jbs.ScoringDatabase;
 
 /**
- * @author bsmith
+ * @author TheCelticTyger
  *
  */
 public class ScoringDatabaseTest {
@@ -26,6 +26,7 @@ public class ScoringDatabaseTest {
 			
 			System.out.println("Creating Score object");
 			Score score = new Score("ABCDEF123","8.8.8.8",2);
+			System.out.println(score.toString());
 			System.out.println("Score object created.");
 			
 			System.out.println("Performing first insert.");
@@ -34,6 +35,8 @@ public class ScoringDatabaseTest {
 			
 			System.out.println("Performing second insert");
 			dbLink.insert(score);
+			
+			dbLink.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
